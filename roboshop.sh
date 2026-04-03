@@ -14,8 +14,8 @@ do
   --image-id ami-0220d79f3f480ecf5 \
   --instance-type t3.micro \
   --security-group-ids sg-04e34764ba27cbbde \
-  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value='$instance'}]' \
-  --query Instances[0].PrivateIpAddress \
+  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
+  --query Instances[0].InstanceId \
   --output text)
   
 if [ $instance != "frontend" ]
@@ -23,7 +23,7 @@ if [ $instance != "frontend" ]
     IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
     else
     IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-  fi
+fi
 
   echo "$instance Ip Address: $IP"
 done
