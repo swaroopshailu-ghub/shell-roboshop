@@ -14,14 +14,16 @@ do
   --image-id ami-0220d79f3f480ecf5 \
   --instance-type t3.micro \
   --security-group-ids sg-04e34764ba27cbbde \
-  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=testSRS}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value='$instance'}]' \
   --query Instances[0].PrivateIpAddress \
   --output text)
   
 if [ $instance != "frontend" ]
-then
-IP=aws ec2 describe-instances \
-  --instance-ids i-xxxxxxxxxxxx \
-  --query "Reservations[0].Instances[0].PrivateIpAddress" \
-  --output text
+    then
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
+    else
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+  fi
+
+  echo "$instance Ip Address: $IP"
 done
